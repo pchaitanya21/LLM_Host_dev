@@ -13,7 +13,7 @@ import configparser
 graph_role = r'''A professional Geo-information scientist and programmer good at Python. You can read geoJSON files and depending on the task perform GIS operations. You have worked on Geographic information science more than 20 years, and know every detail and pitfall when processing spatial data and coding. You know well how to set up workflows for spatial analysis tasks. You have significant experence on graph theory, application, and implementation. You are also experienced on generating map using Matplotlib and GeoPandas.
 '''
 
-graph_task_prefix = r'The geoJSON file has the following properties: "Health" (either "Healthy" or "Unhealthy"), "Tree_ID", "Species" (either "Ash" or "Non-Ash"), "SURVEY_DATE" (format: Wed, 11 Sep 2024 00:00:00 GMT) and the final goal is to return the "Tree_ID" based on what the user wants. Generate a graph (data structure) only, whose nodes are (1) a series of consecutive steps and (2) data to solve this question: '
+graph_task_prefix = r'The geoJSON file has the following properties: "Health" (either "Healthy" or "Unhealthy"), "Tree_ID", "Species" (either "Ash" or "Non-Ash"), "SURVEY_DATE" (format: Wed, 11 Sep 2024 00:00:00 GMT) and the final goal is to return the "Tree_ID" or text summary based on what the user wants. Generate a graph (data structure) only, whose nodes are (1) a series of consecutive steps and (2) data to solve this question: '
 #update the task prefix to include the potential for text or show_tree_id based prompts and the tree height, area and find a way to give meta data to the prompt. 
 #For the demo case
 # graph_reply_exmaple = r"""
@@ -66,6 +66,7 @@ graph_requirement = [
                         'Ensure the location for saving the graph file is not commented out.',
                         'Put your reply into a Python code block, NO explanation or conversation outside the code block(enclosed by ```python and ```).',
                         'Note that GraphML writer does not support class dict or list as data values.',
+                        'If the user asks about the trees lost in a storm you need to compare the tree ids that survived before and after the storm from the two respective data sources',
                         'You need spatial data (e.g., vector or raster) to make a map.',
                         #'Do not put the GraphML writing process as a step in the graph.',
                         'Keep the graph concise, DO NOT use too many operation nodes.',
@@ -87,7 +88,7 @@ graph_requirement = [
 operation_role = r'''A professional Geo-information scientist and programmer good at Python. You can read geoJSON files and depending on the task perform GIS operations. You have worked on Geographic information science more than 20 years, and know every detail and pitfall when processing spatial data and coding. You know well how to design and implement a function that meet the interface between other functions. Yor program is always robust, considering the various data circumstances, such as column data types, avoiding mistakes when joining tables, and remove NAN cells before further processing. You have an good feeling of overview, meaning the functions in your program is coherent, and they connect to each other well, such as function names, parameters types, and the calling orders. You are also super experienced on generating maps using GeoPandas and Matplotlib.
 '''
 
-operation_task_prefix = r'The geoJSON file has the following properties: "Health" (either "Healthy" or "Unhealthy"), "Tree_ID", "Species" (either "Ash" or "Non-Ash"), "SURVEY_DATE" (format: Wed, 11 Sep 2024 00:00:00 GMT) and the final goal is to return the "Tree_ID" based on what the user wants. You need to generate a Python function to do: '
+operation_task_prefix = r'The geoJSON file has the following properties: "Health" (either "Healthy" or "Unhealthy"), "Tree_ID", "Species" (either "Ash" or "Non-Ash"), "SURVEY_DATE" (format: Wed, 11 Sep 2024 00:00:00 GMT) and the final goal is to return the "Tree_ID" or text summary based on what the user wants. You need to generate a Python function to do: '
 
 #For the demo case
 # operation_reply_exmaple = """
@@ -119,6 +120,7 @@ operation_requirement = [
                         # "Note module 'pandas' has no attribute or method of 'StringIO'",
                         "Use the latest Python modules and methods.",
                         "When doing spatial analysis, convert the involved spatial layers into the same map projection, if they are not in the same projection.",
+                        'If the user asks about the trees lost in a storm you need to compare the tree ids that survived before and after the storm from the two respective data sources',
                         # "DO NOT reproject or set spatial data(e.g., GeoPandas Dataframe) if only one layer involved.",
                         "Map projection conversion is only conducted for spatial data layers such as GeoDataFrame. DataFrame loaded from a CSV file does not have map projection information.",
                         "If join DataFrame and GeoDataFrame, using common columns, DO NOT convert DataFrame to GeoDataFrame.",
@@ -165,6 +167,7 @@ assembly_requirement = ['You can think step by step. ',
                     f"Please generate Python code with consistent indentation using 4 spaces per indentation level. Ensure that all code blocks, including functions, loops, and conditionals, are properly indented to reflect their logical structure. Avoid using tabs or inconsistent spacing.",
                     f"The final result of the assembly program should return the 'Tree_ID' that match the criteria given by the user.",
                     f"The geoJSON file has the following properties: 'Health' (either 'Healthy' or 'Unhealthy'), 'Tree_ID', 'Species' (either 'Ash' or 'Non-Ash'), 'SURVEY_DATE' (format: Wed, 11 Sep 2024 00:00:00 GMT).",
+                    f"If the user asks about the trees lost in a storm you need to compare the tree ids that survived before and after the storm from the two respective data sources",
                     f"Save final maps, if any. If use matplotlib, the function is: matplotlib.pyplot.savefig(*args, **kwargs).",
                     f"The program is executable, put it in a function named 'assembely_solution()' then run it, but DO NOT use 'if __name__ == '__main__:' statement because this program needs to be executed by exec().",
                     "The program should assign the final result by calling 'result = assembely_solution()' after defining the function, so the result is stored in a variable named 'result' in the global namespace.",
