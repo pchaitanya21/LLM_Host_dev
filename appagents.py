@@ -201,9 +201,9 @@ def save_history(session_id: str, history: list):
     doc = db.collection("chat_histories").document(session_id).get()
     existing_history = doc.to_dict().get("history", []) if doc.exists else []
     
-    # Combine and keep only the last 20 entries
+    # Combine and keep only the last 50 entries
     
-    combined_history = (existing_history + history)[-20:] 
+    combined_history = (existing_history + history)[-60:] 
     
     db.collection("chat_histories").document(session_id).set({"history": combined_history})
 
